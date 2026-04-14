@@ -13,28 +13,40 @@ cc -O2 test_tinynetcdf.c tinynetcdf.c -lm -o test && ./test
 
 ** Write
 #+begin_src c
-ncf_file_t *f = ncf_open("out.nc", 'w');
-ncf_def_dim(f, "x", 4);
-const char *dims[] = {"x"};
-ncf_def_var(f, "data", NC_FLOAT, 1, dims);
-float v[] = {1.0f, 2.0f, 3.0f, 4.0f};
-ncf_put_var(f, "data", v);
-ncf_close(f);
+#include "tinynetcdf.h"
+
+int main(void) {
+  ncf_file_t *f = ncf_open("out.nc", 'w');
+  ncf_def_dim(f, "x", 4);
+  const char *dims[] = {"x"};
+  ncf_def_var(f, "data", NC_FLOAT, 1, dims);
+  float v[] = {1.0f, 2.0f, 3.0f, 4.0f};
+  ncf_put_var(f, "data", v);
+  ncf_close(f);
+}
 #+end_src
 
 ** Read
 #+begin_src c
-ncf_file_t *f = ncf_open("out.nc", 'r');
-void *data; size_t nb;
-ncf_get_var(f, "data", &data, &nb);
-float *v = (float *)data;   /* valid until ncf_close */
-ncf_close(f);
+#include "tinynetcdf.h"
+
+int main(void) {
+  ncf_file_t *f = ncf_open("out.nc", 'r');
+  void *data; size_t nb;
+  ncf_get_var(f, "data", &data, &nb);
+  float *v = (float *)data;   /* valid until ncf_close */
+  ncf_close(f);
+}
 #+end_src
 
 ** Append records
 #+begin_src c
-ncf_file_t *f = ncf_open("out.nc", 'a');
-float slab[4] = {10.0f, 11.0f, 12.0f, 13.0f};
-ncf_put_rec(f, "data", 3, slab);   /* append record 3 */
-ncf_close(f);
+#include "tinynetcdf.h"
+
+int main(void) {
+  ncf_file_t *f = ncf_open("out.nc", 'a');
+  float slab[4] = {10.0f, 11.0f, 12.0f, 13.0f};
+  ncf_put_rec(f, "data", 3, slab);   /* append record 3 */
+  ncf_close(f);
+}
 #+end_src
